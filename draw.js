@@ -141,8 +141,7 @@ function NYDotLine(_x1, _y1, _x2, _y2) {
         let y = lerp(_y1, _y2, i / points);
 
         let size = noise(x * 0.1, y * 0.1, 600) * 12 + 1;
-
-        x -= 0.5 * size;
+        // x -= 0.5 * size;
 
         let tempHue = nowHue + random(-5, 5);
         let tempSat = nowSat + random(-5, 5);

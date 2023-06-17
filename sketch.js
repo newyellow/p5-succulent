@@ -28,8 +28,9 @@ let bowls = [];
 
 async function setup() {
   createCanvas(windowWidth, windowHeight);
-  background(30);
   colorMode(HSB);
+  pixelDensity(2);
+  background(20);
 
   dotDensity = random(0.05, 0.5);
   lineDensity = random(0.4, 0.8);
@@ -62,8 +63,7 @@ async function setup() {
   let bgBriA = random(5, 25);
   let bgBriB = random(5, 25);
 
-  if(random() < 0.5)
-  {
+  if (random() < 0.5) {
     bgBriA = random(20, 40);
     bgBriB = random(20, 40);
   }
@@ -103,12 +103,12 @@ async function setup() {
       let rects = SubdivideRect(startX, startY, rectWidth, rectHeight, 0);
 
       for (let r = 0; r < rects.length; r++) {
-        let rect = rects[r];
+        let rectObj = rects[r];
 
-        let bowlX = rect.x;
-        let bowlY = rect.y;
-        let bowlWidth = rect.w;
-        let bowlHeight = rect.h;
+        let bowlX = rectObj.x;
+        let bowlY = rectObj.y;
+        let bowlWidth = rectObj.w;
+        let bowlHeight = rectObj.h;
 
         let newBowl = new PlantBowl(bowlX, bowlY, bowlWidth, bowlHeight);
         bowls.push(newBowl);
@@ -200,4 +200,10 @@ function draw() {
 
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function keyPressed(e) {
+  if (e.key == 's') {
+    saveCanvas('pots-greens-' + fxhash + '.png');
+  }
 }
