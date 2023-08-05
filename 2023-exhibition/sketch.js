@@ -23,12 +23,17 @@ let nowSat = 0;
 let nowBri = 0;
 let nowAlpha = 0;
 
-
 let bowls = [];
 
 async function setup() {
-  createCanvas(windowWidth, windowHeight);
+  let paddingRatio = 0.1;
+  createCanvas(1920, 1080);
+
+  randomSeed(fxrand() * 1000000);
+  noiseSeed(fxrand() * 1000000);
+
   colorMode(HSB);
+  // pixelDensity(1);
   pixelDensity(2);
   background(20);
 
@@ -77,10 +82,18 @@ async function setup() {
     NYDotLine(0, nowY, width, nowY);
   }
 
+  let fileName = "succulent-bg-" + fxhash;
+  save(fileName);
+
+  await sleep(2000);
+
+  window.location.reload();
+  return ;
+
   let xCount = floor(random(1, 3));
   let yCount = floor(random(1, 3));
 
-  let padding = min(windowWidth, windowHeight) * 0.05;
+  let padding = min(width, height) * paddingRatio;
 
   let rectWidth = (width - 2 * padding) / xCount;
   let rectHeight = (height - 2 * padding) / yCount;
@@ -146,6 +159,9 @@ function SubdivideRect(_x, _y, _width, _height, _depth) {
 
   let doSplit = random(0, 1) < 0.9;
 
+  if(_depth == 0)
+    doSplit = true;
+
   if (min(_width, _height) < 120) {
     doSplit = false;
   }
@@ -204,6 +220,6 @@ function sleep(ms) {
 
 function keyPressed(e) {
   if (e.key == 's') {
-    saveCanvas('pots-greens-' + fxhash + '.png');
+    saveCanvas(`succulent-${width}-${height}-${fxhash}.png`);
   }
 }
