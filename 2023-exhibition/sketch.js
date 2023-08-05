@@ -25,19 +25,30 @@ let nowAlpha = 0;
 
 let bowls = [];
 
+// bg
+let currentBgImg;
+
+function preload() {
+  console.log(fxhash);
+  randomSeed(fxrand() * 1000000);
+  noiseSeed(fxrand() * 1000000);
+
+  let randomBgIndex = int(random(0, 256));
+  let imgUrl = "succulent-bgs/" + bgFileList[randomBgIndex];
+  
+  currentBgImg = loadImage(imgUrl);
+}
+
 async function setup() {
   let paddingRatio = 0.1;
   createCanvas(1920, 1080);
-
-  randomSeed(fxrand() * 1000000);
-  noiseSeed(fxrand() * 1000000);
 
   colorMode(HSB);
   // pixelDensity(1);
   pixelDensity(2);
   background(20);
 
-  dotDensity = random(0.05, 0.5);
+  dotDensity = random(0.05, 0.3);
   lineDensity = random(0.4, 0.8);
 
   noiseScaleX = random(0.0001, 0.01);
@@ -59,36 +70,10 @@ async function setup() {
   curveTypes.push(easeOutElastic);
   curveTypes.push(easeInSine);
   curveTypes.push(easeOutBack);
-
-  // background rect?
-  let bgHueA = processHue(mainHue + random(-10, 10));
-  let bgHueB = processHue(mainHue + random(-10, 10));
-  let bgSatA = random(0, 20);
-  let bgSatB = random(0, 20);
-  let bgBriA = random(5, 25);
-  let bgBriB = random(5, 25);
-
-  if (random() < 0.5) {
-    bgBriA = random(20, 40);
-    bgBriB = random(20, 40);
-  }
-  let bgLineCount = height * lineDensity;
-
-  for (let y = 0; y < bgLineCount; y++) {
-    let t = y / (bgLineCount - 1);
-    let nowY = height * t;
-
-    NYSetColorLerp(bgHueA, bgSatA, bgBriA, bgHueB, bgSatB, bgBriB, t);
-    NYDotLine(0, nowY, width, nowY);
-  }
-
-  let fileName = "succulent-bg-" + fxhash;
-  save(fileName);
-
-  await sleep(2000);
-
-  window.location.reload();
-  return ;
+  
+  // draw bg
+  image(currentBgImg, 0, 0, width, height);
+ 
 
   let xCount = floor(random(1, 3));
   let yCount = floor(random(1, 3));

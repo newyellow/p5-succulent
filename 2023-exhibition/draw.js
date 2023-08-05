@@ -33,10 +33,12 @@ async function drawPlantB(_x, _y, _radiusMax, _radiusMin, _layers, _countPerLaye
             NYSetColor(leafColor[0], leafColor[1], leafColor[2] + briAdd, 0.8);
             drawArcLeaf(_x, _y, nowDistanceFromCenter, nowRot, nowLeafDrawAngle, nowLeafThickness, nowCurveType);
         }
+
+        await sleep(1);
     }
 }
 
-function drawPlant(_x, _y, _radiusMax, _radiusMin, _leafWidth, _layers, _countPerLayer) {
+async function drawPlant(_x, _y, _radiusMax, _radiusMin, _leafWidth, _layers, _countPerLayer) {
 
     let nowCurveType = random(curveTypes);
     let nowLeafWidth = _leafWidth;
@@ -62,6 +64,8 @@ function drawPlant(_x, _y, _radiusMax, _radiusMin, _leafWidth, _layers, _countPe
             nowRot += rotAdd * random(0.6, 1.4);
             drawLeaf(_x, _y, nowLeafWidth, nowLength, nowRot, nowCurveType);
         }
+
+        await sleep(1);
     }
 }
 
