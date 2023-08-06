@@ -67,7 +67,7 @@ class PlantBowl {
         this.plantHeight = this.bowlHeight - 2 * this.bowlThickness - this.paddingTop - this.paddingBottom;
     }
 
-    drawBowlRect() {
+    async drawBowlRect() {
         randomBowlColor();
         let bowlColorA = randomBowlColor();
         let bowlColorB = [];
@@ -99,6 +99,7 @@ class PlantBowl {
             let bowlColorData = NYLerpColorData(bowlColorA, bowlColorB, t);
             NYSetColor(bowlColorData[0], bowlColorData[1], bowlColorData[2]);
             NYRectFrame(nowX, nowY, nowWidth, nowHeight);
+            await sleep(1);
         }
 
         // fill with dirt
@@ -118,7 +119,7 @@ class PlantBowl {
         // }
     }
 
-    drawBowlRound() {
+    async drawBowlRound() {
 
         let drawWidth = this.bowlWidth - this.paddingLeft - this.paddingRight;
         let drawHeight = this.bowlHeight - this.paddingTop - this.paddingBottom;
@@ -143,6 +144,7 @@ class PlantBowl {
             let bowlColorData = NYLerpColorData(bowlColorA, bowlColorB, t);
             NYSetColor(bowlColorData[0], bowlColorData[1], bowlColorData[2], 0.8);
             NYCircle(drawX, drawY, lerp(fromRadius, toRadius, t));
+            await sleep(1);
         }
     }
 

@@ -121,15 +121,28 @@ async function setup() {
 
     if (bowls[i].bowlType <= 1) // rect
     {
-      bowls[i].drawBowlRect();
+      await bowls[i].drawBowlRect();
     }
     else if (bowls[i].bowlType == 2) // circle
     {
-      bowls[i].drawBowlRound();
+      await bowls[i].drawBowlRound();
     }
 
     await sleep(1);
   }
+
+  // sort: small bowl draw first
+  bowls.sort(function (a, b) {
+    let sizeA = min(a.plantWidth, a.plantHeight);
+    let sizeB = min(b.plantWidth, b.plantHeight);
+
+    if(sizeA < sizeB)
+      return -1;
+    else if(sizeA > sizeB)
+      return 1;
+    else
+      return 0;
+  });
 
   for (let i = 0; i < bowls.length; i++) {
     if (bowls[i].bowlType == 3) // empty bowl
