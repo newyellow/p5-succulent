@@ -1,3 +1,7 @@
+// exhibition settings
+let reloadTime = 6000;
+let drawDensity = 0.8;
+let drawBowlLoopCount = 3;
 
 // style parameters
 let noiseScaleX = 0.1;
@@ -34,8 +38,8 @@ function preload() {
   noiseSeed(fxrand() * 1000000);
 
   let randomBgIndex = int(random(0, 256));
-  let imgUrl = "succulent-bgs/" + bgFileList[randomBgIndex];
-  
+  let imgUrl = "succulent-bgs-1920/" + bgFileList[randomBgIndex];
+
   currentBgImg = loadImage(imgUrl);
 }
 
@@ -70,10 +74,10 @@ async function setup() {
   curveTypes.push(easeOutElastic);
   curveTypes.push(easeInSine);
   curveTypes.push(easeOutBack);
-  
+
   // draw bg
   image(currentBgImg, 0, 0, width, height);
- 
+
 
   let xCount = floor(random(1, 3));
   let yCount = floor(random(1, 3));
@@ -133,12 +137,9 @@ async function setup() {
 
   // sort: small bowl draw first
   bowls.sort(function (a, b) {
-    let sizeA = min(a.plantWidth, a.plantHeight);
-    let sizeB = min(b.plantWidth, b.plantHeight);
-
-    if(sizeA < sizeB)
+    if (a.plantSize < b.plantSize)
       return -1;
-    else if(sizeA > sizeB)
+    else if (a.plantSize > b.plantSize)
       return 1;
     else
       return 0;
@@ -151,13 +152,43 @@ async function setup() {
     bowls[i].drawPlant();
     await sleep(1);
   }
+
+
+  // wait for every bowl to finish draw
+  while (true) {
+    let isAllFinish = true;
+    let notFinishCount = 0;
+    for (let i = 0; i < bowls.length; i++) {
+      if (bowls[i].isPlantDrawn == false) {
+        notFinishCount++;
+        isAllFinish = false;
+        break;
+      }
+    }
+
+    if (isAllFinish) {
+      //console.log("All Plant Draw Finish!");
+      break;
+    }
+    else {
+      //console.log(`total: ${bowls.length}, not finish: ${notFinishCount}`);
+      await sleep(300);
+    }
+  }
+
+  console.log("All Plant Draw Finish");
+  await sleep(reloadTime);
+
+  window.location.reload();
+
 }
+
 
 function SubdivideRect(_x, _y, _width, _height, _depth) {
 
   let doSplit = random(0, 1) < 0.9;
 
-  if(_depth == 0)
+  if (_depth == 0)
     doSplit = true;
 
   if (min(_width, _height) < 120) {

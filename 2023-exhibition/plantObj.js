@@ -8,9 +8,12 @@ class PlantBowl {
         this.bowlThickness = random(0.05, 0.2) * min(_width, _height);
 
         this.bowlType = 1; // 0: random rect bowl, 1: square bowl, 2: round bowl
+        this.isPlantDrawn = false;
 
-        if (random() < 0.06)
+        if (random() < 0.06) {
             this.bowlType = 3; // empty bowl
+            this.isPlantDrawn = true; // no need to draw
+        }
 
         let minSide = min(_width, _height);
         this.paddingLeft = random(0, 0.2) * minSide;
@@ -65,6 +68,11 @@ class PlantBowl {
         this.plantY = this.bowlY + this.paddingTop + this.bowlThickness;
         this.plantWidth = this.bowlWidth - 2 * this.bowlThickness - this.paddingLeft - this.paddingRight;
         this.plantHeight = this.bowlHeight - 2 * this.bowlThickness - this.paddingTop - this.paddingBottom;
+
+        if (this.bowlType <= 1)
+            this.plantSize = random(0.3, 1.2) * min(this.plantWidth, this.plantHeight);
+        else if (this.bowlType == 2)
+            this.plantSize = random(0.3, 0.8) * min(this.plantWidth, this.plantHeight);
     }
 
     async drawBowlRect() {
@@ -99,7 +107,9 @@ class PlantBowl {
             let bowlColorData = NYLerpColorData(bowlColorA, bowlColorB, t);
             NYSetColor(bowlColorData[0], bowlColorData[1], bowlColorData[2]);
             NYRectFrame(nowX, nowY, nowWidth, nowHeight);
-            await sleep(1);
+
+            if (i % drawBowlLoopCount == 0)
+                await sleep(1);
         }
 
         // fill with dirt
@@ -144,11 +154,13 @@ class PlantBowl {
             let bowlColorData = NYLerpColorData(bowlColorA, bowlColorB, t);
             NYSetColor(bowlColorData[0], bowlColorData[1], bowlColorData[2], 0.8);
             NYCircle(drawX, drawY, lerp(fromRadius, toRadius, t));
-            await sleep(1);
+
+            if (i % drawBowlLoopCount == 0)
+                await sleep(1);
         }
     }
 
-    drawPlant() {
+    async drawPlant() {
 
         if (this.bowlType <= 1) // rectangle or square
         {
@@ -163,34 +175,31 @@ class PlantBowl {
                 let spawnX = this.plantX + random(0.1, 0.9) * this.plantWidth;
                 let spawnY = this.plantY + random(0.1, 0.9) * this.plantHeight;
 
-                let plantSize = random(0.3, 1.2) * min(this.plantWidth, this.plantHeight);
-
                 let layers = floor(random(3, 12));
                 let countPerLayer = floor(random(3, 24));
 
-                drawPlantB(spawnX, spawnY, plantSize, 0, layers, countPerLayer);
+                await drawPlantB(spawnX, spawnY, this.plantSize, 0, layers, countPerLayer);
                 // drawPlant(spawnX, spawnY, plantSize, plantSize * random(0.2, 0.7), random(0.1, 0.4) * plantSize, layers, countPerLayer);
             }
         }
-        else if(this.bowlType == 2)
-        {
+        else if (this.bowlType == 2) {
             console.log("round bowl?");
             let spawnX = this.plantX + this.plantWidth / 2 + random(-0.2, 0.2) * this.plantWidth;
             let spawnY = this.plantY + this.plantHeight / 2 + random(-0.2, 0.2) * this.plantHeight;
 
-            let plantSize = random(0.3, 0.8) * min(this.plantWidth, this.plantHeight);
-
             let layers = floor(random(3, 12));
             let countPerLayer = floor(random(3, 24));
 
-            drawPlantB(spawnX, spawnY, plantSize, 0, layers, countPerLayer);
+            await drawPlantB(spawnX, spawnY, this.plantSize, 0, layers, countPerLayer);
         }
+
+        this.isPlantDrawn = true;
     }
 }
 
 function NYCircle(_x, _y, _radius) {
     let circleLineLength = 2 * PI * _radius;
-    let drawStrokeCount = circleLineLength * lineDensity;
+    let drawStrokeCount = circleLineLength * lineDensity * 0.4;
 
     for (let i = 0; i < drawStrokeCount; i++) {
         let t = i / drawStrokeCount;
