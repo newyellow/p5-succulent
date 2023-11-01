@@ -1,7 +1,9 @@
 // exhibition settings
 let reloadTime = 6000;
+let idleReloadTime = 90000;
+
 let drawDensity = 0.8;
-let drawBowlLoopCount = 3;
+let drawBowlLoopCount = 1;
 
 // style parameters
 let noiseScaleX = 0.1;
@@ -37,6 +39,11 @@ function preload() {
   randomSeed(fxrand() * 1000000);
   noiseSeed(fxrand() * 1000000);
 
+  // prevent that the system freezes
+  setTimeout(()=>{
+    window.location.reload();
+  }, idleReloadTime);
+
   let randomBgIndex = int(random(0, 256));
   let imgUrl = "succulent-bgs-1920/" + bgFileList[randomBgIndex];
 
@@ -48,8 +55,7 @@ async function setup() {
   createCanvas(1920, 1080);
 
   colorMode(HSB);
-  // pixelDensity(1);
-  pixelDensity(2);
+  pixelDensity(drawDensity);
   background(20);
 
   dotDensity = random(0.05, 0.3);
