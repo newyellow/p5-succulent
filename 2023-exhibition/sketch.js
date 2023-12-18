@@ -44,8 +44,9 @@ function preload() {
     window.location.reload();
   }, idleReloadTime);
 
-  let randomBgIndex = int(random(0, 256));
-  let imgUrl = "succulent-bgs-1920/" + bgFileList[randomBgIndex];
+  let randomBgIndex = int(random(0, 460));
+  let imgUrl = `bgs-jpg/${String(randomBgIndex).padStart(4, '0')}.jpg`;
+  console.log('load bg: ' + imgUrl);
 
   currentBgImg = loadImage(imgUrl);
 }
